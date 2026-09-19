@@ -77,7 +77,7 @@ export default function App() {
       return false
     }
   })
-  const showStatic = forceStatic || !webglOk || reduced || sceneFailed
+  const showStatic = forceStatic || !webglOk || sceneFailed
 
   // mirror the reduced-motion preference onto <html> so CSS can settle states
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function App() {
     if (showStatic) return
     const start = () => setMountScene(true)
     // evaluate the heavy chunk when the main thread is quiet, with a hard cap
-    const id = window.requestIdleCallback(start, { timeout: 1800 })
+    const id = window.requestIdleCallback(start, { timeout: 800 })
     return () => window.cancelIdleCallback(id)
   }, [showStatic])
 
@@ -147,7 +147,7 @@ export default function App() {
     // hidden/prerendered tabs, so the scene legitimately cannot warm up there.
     const arm = () => {
       if (document.hidden) return
-      t = window.setTimeout(() => setSceneFailed(true), 8000)
+      t = window.setTimeout(() => setSceneFailed(true), 15000)
     }
     const onVis = () => {
       if (t) window.clearTimeout(t)

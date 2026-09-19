@@ -61,8 +61,8 @@ export function PerformanceEnvironment() {
         shadow-camera-bottom={-8}
         shadow-bias={-0.0004}
       />
-      <directionalLight ref={rim} position={[-7, 3, -6]} intensity={0.45} color="#c8ff3d" />
-      <pointLight ref={accentRef} position={[0, 4.0, 0.5]} intensity={1.4} color="#c8ff3d" distance={6} decay={2.8} />
+      <directionalLight ref={rim} position={[-7, 3, -6]} intensity={0.25} color="#c8ff3d" />
+      <pointLight ref={accentRef} position={[0, 4.0, 0.5]} intensity={0.6} color="#c8ff3d" distance={6} decay={2.8} />
       {!mobile && (
         <pointLight ref={fill} position={[2, 1, 3]} intensity={0.5} color="#f2f2ed" distance={9} decay={2.4} />
       )}

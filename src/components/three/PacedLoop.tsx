@@ -20,13 +20,13 @@ let lastHot = 0
  *  - When in doubt, keep the scene: an ambiguous window counts as healthy and
  *    a hard ceiling fades the canvas in rather than leaving it empty.
  */
-const FRAME_BUDGET = 46 // ms — below ~21fps is no longer cinematic
-const WARMUP_MS = 1200 // let shaders compile / environment bake / fonts settle
-const WARMUP_FRAMES = 14
-const WINDOW = 40 // frames per verdict window
-const GOOD_RATIO = 0.3 // < 30% over budget => healthy
-const BAD_RATIO = 0.6 // > 60% over budget => failing window
-const SUSTAIN = 3 // consecutive failing windows before demoting
+const FRAME_BUDGET = 52 // ms — below ~19fps is no longer cinematic
+const WARMUP_MS = 1400 // let shaders compile / environment bake / fonts settle
+const WARMUP_FRAMES = 16
+const WINDOW = 44 // frames per verdict window
+const GOOD_RATIO = 0.35 // < 35% over budget => healthy
+const BAD_RATIO = 0.65 // > 65% over budget => failing window
+const SUSTAIN = 4 // consecutive failing windows before demoting
 const PROBE_CEILING_MS = 5000 // never leave the canvas hidden longer than this
 
 /**

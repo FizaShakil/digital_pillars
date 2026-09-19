@@ -87,7 +87,7 @@ export function GlassAnchors() {
       const s = mesh.userData.scale as number
       mesh.scale.setScalar(s)
       mesh.quaternion.copy(camera.quaternion)
-      mat.opacity = 0.1 * fade
+      mat.opacity = 0.06 * fade
     }
   })
 

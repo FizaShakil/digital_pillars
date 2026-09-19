@@ -69,27 +69,28 @@ export function isAutomationBrowser(): boolean {
   return navigator.webdriver === true
 }
 
-/** `?scene=1` on the URL (or the localStorage flag) forces the 3D layer on. */
+/** `?scene=1` on the URL (or the localStorage flag) forces the 3D layer on.
+ *  Dev environments (localhost / 127.0.0.1) also auto-enable so the scene
+ *  is visible during development without extra flags. */
 export function sceneForced(): boolean {
   try {
     if (typeof window === 'undefined') return false
     if (localStorage.getItem('dp-force-scene') === '1') return true
-    return new URLSearchParams(window.location.search).get('scene') === '1'
+    if (new URLSearchParams(window.location.search).get('scene') === '1') return true
+    // auto-enable on dev servers so the scene is always visible during development
+    const host = window.location.hostname
+    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') return true
+    return false
   } catch {
     return false
   }
 }
 
-/** The cinematic layer runs for real viewers with capable hardware; bots get the lean static layer. */
+/** The cinematic layer runs for real browsers with WebGL; `?scene=1` overrides for QA. */
 export function webglCapable(): boolean {
   if (typeof window === 'undefined') return true
   if (sceneForced()) return true
-  return (
-    supportsWebGL() &&
-    !isSoftwareRenderer() &&
-    !isAutomationBrowser() &&
-    gpuTier() === 'ok'
-  )
+  return supportsWebGL() && gpuTier() !== 'unavailable'
 }
 
 interface Listeners {

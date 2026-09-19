@@ -22,7 +22,7 @@ export function StaticFallback() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 34% 46% at 58% 32%, rgba(200,255,61,0.1), transparent 70%)',
+            'radial-gradient(ellipse 34% 46% at 58% 32%, rgba(200,255,61,0.05), transparent 70%)',
         }}
       />
       {/* the layered pillar */}

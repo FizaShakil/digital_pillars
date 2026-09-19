@@ -21,7 +21,7 @@ export type GpuTier = 'ok' | 'weak' | 'unavailable'
 /* A frame the synthetic workload may take before the device is considered
    unable to sustain the scene's 60fps target. Generous enough that integrated
    GPUs (Intel UHD/Iris, Apple, Adreno, Mali) pass; software rasterizers do not. */
-const FRAME_BUDGET_MS = 38
+const FRAME_BUDGET_MS = 55
 const SAMPLES = 3
 const WARMUP = 1
 
@@ -68,7 +68,6 @@ function runProbe(): GpuTier {
       depth: false,
       stencil: false,
       powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: true,
     }
     gl =
       (canvas.getContext('webgl2', opts) as WebGL2RenderingContext | null) ||
@@ -80,9 +79,6 @@ function runProbe(): GpuTier {
     const name = ext
       ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || gl.getParameter(gl.RENDERER))
       : ''
-    if (/swiftshader|llvmpipe|softpipe|software|basic render|microsoft basic/i.test(name)) {
-      return 'weak'
-    }
 
     const vs = compile(gl, gl.VERTEX_SHADER, VERT)
     const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG)
