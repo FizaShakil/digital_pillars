@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { deviceBus, scrollBus, smoothstep } from '../../lib/bus'
 import { getGlowTexture } from './textures'
 
-const MAX_ANCHORS = 4
+const MAX_ANCHORS = 2
 
 /**
  * 3D ↔ glass integration.

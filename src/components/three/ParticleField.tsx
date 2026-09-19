@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { deviceBus } from '../../lib/bus'
+import { deviceBus, scrollBus } from '../../lib/bus'
 import { getParticleSprite } from './textures'
 
 function makeField(
@@ -12,7 +12,6 @@ function makeField(
 ) {
   const positions = new Float32Array(count * 3)
   for (let i = 0; i < count; i++) {
-    // deterministic-ish scatter with a softer pool near the pillar
     const rr = Math.pow(Math.random(), 0.75)
     positions[i * 3] = (Math.random() * 2 - 1) * bounds[0] * rr
     positions[i * 3 + 1] = Math.random() * yMax
@@ -23,12 +22,6 @@ function makeField(
   return g
 }
 
-/**
- * Two restrained point clouds:
- *  - a fine "dust" layer (bone) floating around the environment
- *  - a tiny lime "data mote" layer that drifts in slow circles
- * Counts are intentionally low and reduced again on mobile.
- */
 export function ParticleField() {
   const { mobile, reduced } = deviceBus
   const dustCount = mobile ? 50 : 120
@@ -41,6 +34,7 @@ export function ParticleField() {
   const dustGroup = useRef<THREE.Group>(null)
   const emberGroup = useRef<THREE.Group>(null)
   const dustMat = useRef<THREE.PointsMaterial>(null)
+  const emberMat = useRef<THREE.PointsMaterial>(null)
 
   useFrame((state, dt) => {
     if (reduced) return
@@ -50,12 +44,15 @@ export function ParticleField() {
       dustGroup.current.position.y = Math.sin(t * 0.1) * 0.12
     }
     if (emberGroup.current) {
-      // restrained orbital drift around the pillar
       emberGroup.current.rotation.y -= dt * 0.02
       emberGroup.current.position.y = Math.sin(t * 0.16 + 1) * 0.14
     }
     if (dustMat.current) {
       dustMat.current.opacity = 0.3 + Math.sin(t * 0.22) * 0.04
+    }
+    if (emberMat.current) {
+      const l = Math.min(1, Math.max(0, (scrollBus.progress - 0.05) / 0.3))
+      emberMat.current.opacity = l * 0.18
     }
   })
 
@@ -79,12 +76,13 @@ export function ParticleField() {
       <group ref={emberGroup}>
         <points geometry={emberGeo} frustumCulled={false}>
           <pointsMaterial
+            ref={emberMat}
             map={sprite}
             color="#c8ff3d"
             size={0.025}
             sizeAttenuation
             transparent
-            opacity={0.18}
+            opacity={0}
             depthWrite={false}
             blending={THREE.AdditiveBlending}
           />

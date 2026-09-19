@@ -5,7 +5,6 @@ import * as THREE from 'three'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
 import { deviceBus, scrollBus, smoothstep } from '../../lib/bus'
-import { AccentLine } from './AccentLine'
 
 type Layer = { width: number; y: number; x: number; z: number; yaw: number }
 
@@ -31,22 +30,35 @@ function InnerDataCore() {
   const core = useRef<THREE.Mesh>(null)
   const ringA = useRef<THREE.Mesh>(null)
   const ringB = useRef<THREE.Mesh>(null)
+  const housingRef = useRef<THREE.Mesh>(null)
 
   useFrame((state) => {
-    if (deviceBus.reduced) return
     const t = state.clock.elapsedTime
-    if (core.current) core.current.scale.setScalar(1 + Math.sin(t * 1.7) * 0.22)
-    if (ringA.current) ringA.current.rotation.z += 0.0035
-    if (ringB.current) ringB.current.rotation.y += 0.0044
+    const lime = Math.min(1, Math.max(0, (scrollBus.progress - 0.05) / 0.3))
+    if (core.current) {
+      core.current.scale.setScalar(1 + Math.sin(t * 1.7) * 0.22)
+      ;(core.current.material as THREE.MeshBasicMaterial).opacity = lime * 0.8
+    }
+    if (ringA.current) {
+      ringA.current.rotation.z += 0.0035
+      ;(ringA.current.material as THREE.MeshBasicMaterial).opacity = lime * 0.55
+    }
+    if (ringB.current) {
+      ringB.current.rotation.y += 0.0044
+      ;(ringB.current.material as THREE.MeshBasicMaterial).opacity = lime * 0.3
+    }
+    if (housingRef.current) {
+      ;(housingRef.current.material as THREE.MeshPhysicalMaterial).opacity = lime * 0.18
+    }
   })
 
   return (
     <group position={[0, 4.32, 0]}>
-      <RoundedBox args={[0.66, 0.66, 0.66]} radius={0.06} smoothness={2}>
+      <RoundedBox ref={housingRef} args={[0.66, 0.66, 0.66]} radius={0.06} smoothness={2}>
         <meshPhysicalMaterial
           color="#e8ece6"
           transparent
-          opacity={0.18}
+          opacity={0}
           roughness={0.08}
           metalness={0}
           envMapIntensity={1.4}
@@ -55,26 +67,29 @@ function InnerDataCore() {
       </RoundedBox>
       <mesh ref={core}>
         <octahedronGeometry args={[0.13, 0]} />
-        <meshBasicMaterial color="#c8ff3d" />
+        <meshBasicMaterial color="#c8ff3d" transparent opacity={0} />
       </mesh>
       <mesh ref={ringA} rotation-x={0.9}>
         <torusGeometry args={[0.24, 0.007, 8, 48]} />
-        <meshBasicMaterial color="#c8ff3d" transparent opacity={0.55} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <meshBasicMaterial color="#c8ff3d" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
       <mesh ref={ringB} rotation-x={1.35}>
         <torusGeometry args={[0.32, 0.004, 8, 48]} />
-        <meshBasicMaterial color="#c8ff3d" transparent opacity={0.3} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <meshBasicMaterial color="#c8ff3d" transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
     </group>
   )
 }
 
 export function GrowthPillar() {
-  const { mobile, reduced } = deviceBus
+  const { mobile } = deviceBus
   const layers = useMemo(() => buildLayers(), [])
   const origin = useRef<THREE.Group>(null)
   const beaconRefs = useRef<(THREE.Mesh | null)[]>([])
   const tipRef = useRef<THREE.Mesh>(null)
+  const limeRef = useRef(0)
+  const accentRefs = useRef<THREE.Mesh[]>([])
+  const accentTargetOps = useRef<number[]>([])
 
   const towerGeometry = useMemo(() => {
     const parts: THREE.BufferGeometry[] = []
@@ -129,7 +144,7 @@ export function GrowthPillar() {
       new THREE.MeshBasicMaterial({
         color: '#c8ff3d',
         transparent: true,
-        opacity: 0.55,
+        opacity: 0,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
@@ -137,7 +152,7 @@ export function GrowthPillar() {
   )
 
   const nodeMat = useMemo(
-    () => new THREE.MeshBasicMaterial({ color: '#c8ff3d', transparent: true, opacity: 0.7 }),
+    () => new THREE.MeshBasicMaterial({ color: '#c8ff3d', transparent: true, opacity: 0 }),
     [],
   )
 
@@ -163,7 +178,13 @@ export function GrowthPillar() {
 
   useFrame((state) => {
     const t = state.clock.elapsedTime
-    if (reduced) return
+
+    const lime = Math.min(1, Math.max(0, (scrollBus.progress - 0.05) / 0.3))
+    limeRef.current += (lime - limeRef.current) * 0.08
+    const l = limeRef.current
+
+    ringMat.opacity = l * 0.55
+    nodeMat.opacity = l * 0.7
 
     const p = scrollBus.intro
     if (origin.current) {
@@ -175,12 +196,27 @@ export function GrowthPillar() {
     }
 
     beaconRefs.current.forEach((b, i) => {
-      if (b) b.scale.setScalar(1 + Math.sin(t * 1.6 + i * 1.9) * 0.35)
+      if (b) b.scale.setScalar(1 + Math.sin(t * 1.6 + i * 1.9) * 0.35 * l)
     })
-    if (tipRef.current) tipRef.current.scale.setScalar(1 + Math.sin(t * 1.5) * 0.3)
+    if (tipRef.current) tipRef.current.scale.setScalar(1 + Math.sin(t * 1.5) * 0.3 * l)
+
+    accentRefs.current.forEach((m, i) => {
+      if (m) {
+        const mat = m.material as THREE.MeshBasicMaterial
+        mat.opacity = l * accentTargetOps.current[i]
+      }
+    })
   })
 
   let beaconSlot = 0
+  let accentSlot = 0
+
+  const setAccentRef = (el: THREE.Mesh | null, targetOpacity: number) => {
+    if (el) {
+      accentTargetOps.current[accentSlot] = targetOpacity
+      accentRefs.current[accentSlot++] = el
+    }
+  }
 
   return (
     <group ref={origin}>
@@ -190,13 +226,6 @@ export function GrowthPillar() {
       <RoundedBox args={[3.5, 0.44, 3.5]} radius={0.08} smoothness={2} position={[0, 0.56, 0]}>
         <meshStandardMaterial color="#121414" metalness={0.64} roughness={0.45} envMapIntensity={0.5} />
       </RoundedBox>
-
-      <mesh rotation-x={-Math.PI / 2} position={[0, 0.351, 0]} material={ringMat}>
-        <planeGeometry args={[4.42, 4.42]} />
-      </mesh>
-      <mesh rotation-x={-Math.PI / 2} position={[0, 0.781, 0]} material={ringMat}>
-        <planeGeometry args={[3.52, 3.52]} />
-      </mesh>
 
       <mesh geometry={towerGeometry} material={graphite} castShadow={!mobile} />
       <mesh geometry={capGeometry} material={glassMat} />
@@ -212,11 +241,6 @@ export function GrowthPillar() {
           material={ringMat}
         />
       ))}
-
-      <AccentLine points={[[-1.32, 0.62, -1.32], [-1.32, 2.5, -1.32]]} opacity={0.45} />
-      <AccentLine points={[[1.32, 0.62, 1.32], [1.32, 2.5, 1.32]]} opacity={0.45} />
-      <AccentLine points={[[-1.05, 0.07, 1.78], [-1.05, 0.7, 1.78]]} opacity={0.6} />
-      <AccentLine points={[[1.05, 0.07, 1.78], [1.05, 0.7, 1.78]]} opacity={0.6} />
 
       {nodes.map((n, i) => {
         const isBeacon = n.beacon
@@ -234,10 +258,9 @@ export function GrowthPillar() {
         )
       })}
 
-      <AccentLine points={[[0, 4.95, 0], [0, 5.2, 0]]} opacity={0.6} />
-      <mesh ref={tipRef} position={[0, 5.22, 0]}>
+      <mesh ref={(el) => { if (el) setAccentRef(el, 0.6) }} position={[0, 5.07, 0]}>
         <octahedronGeometry args={[0.07, 0]} />
-        <meshBasicMaterial color="#c8ff3d" />
+        <meshBasicMaterial color="#c8ff3d" transparent opacity={0} />
       </mesh>
 
       <InnerDataCore />

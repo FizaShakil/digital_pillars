@@ -1,14 +1,24 @@
 import * as THREE from 'three'
-import { deviceBus } from '../../lib/bus'
+import { useFrame } from '@react-three/fiber'
+import { useRef } from 'react'
+import { deviceBus, scrollBus } from '../../lib/bus'
 import { getGlowTexture, getGridTexture } from './textures'
 
-/**
- * Ground plane with a fine architectural grid, a low graphite pedestal and a
- * restrained lime glow that grounds the pillar (additive, very dim).
- */
 export function FloorGrid() {
   const grid = getGridTexture()
   const glow = getGlowTexture()
+  const ringRef = useRef<THREE.Mesh>(null)
+  const glowRef = useRef<THREE.Mesh>(null)
+
+  useFrame(() => {
+    const l = Math.min(1, Math.max(0, (scrollBus.progress - 0.08) / 0.3))
+    if (ringRef.current) {
+      (ringRef.current.material as THREE.MeshBasicMaterial).opacity = l * 0.14
+    }
+    if (glowRef.current) {
+      (glowRef.current.material as THREE.MeshBasicMaterial).opacity = l * 0.07
+    }
+  })
 
   return (
     <group>
@@ -24,7 +34,6 @@ export function FloorGrid() {
         />
       </mesh>
 
-      {/* pedestal */}
       <mesh position={[0, 0.015, 0]} receiveShadow={!deviceBus.mobile}>
         <cylinderGeometry args={[3.6, 3.8, 0.05, 48]} />
         <meshStandardMaterial
@@ -35,26 +44,24 @@ export function FloorGrid() {
         />
       </mesh>
 
-      {/* thin accent ring around the pedestal */}
-      <mesh rotation-x={-Math.PI / 2} position={[0, 0.045, 0]}>
+      <mesh ref={ringRef} rotation-x={-Math.PI / 2} position={[0, 0.045, 0]}>
         <ringGeometry args={[3.7, 3.78, 72]} />
         <meshBasicMaterial
           color="#c8ff3d"
           transparent
-          opacity={0.08}
+          opacity={0}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
 
-      {/* grounding glow — barely visible, just anchors the pillar */}
-      <mesh rotation-x={-Math.PI / 2} position={[0, 0.06, 0]}>
+      <mesh ref={glowRef} rotation-x={-Math.PI / 2} position={[0, 0.06, 0]}>
         <planeGeometry args={[7, 7]} />
         <meshBasicMaterial
           map={glow}
           color="#c8ff3d"
           transparent
-          opacity={0.04}
+          opacity={0}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
