@@ -25,17 +25,17 @@ export function Testimonials() {
   return (
     <section id="studio" className="pointer-events-auto relative z-10 scroll-mt-24">
       <div className="mx-auto max-w-[1440px] px-5 py-[16vh] sm:px-8 sm:py-[18vh]">
-        <div className="flex items-end justify-between gap-6" data-reveal="right">
+        <div className="flex items-end justify-between gap-4 sm:gap-6" data-reveal="right">
           <div>
             <p className="label" data-parallax data-depth="0.08">02 — Studio voice</p>
             <h2
               className="display mt-5 text-bone"
-              style={{ fontSize: 'clamp(2.2rem, 5.6vw, 4.6rem)' }}
+              style={{ fontSize: 'clamp(2rem, 5.6vw, 4.6rem)' }}
             >
               Proof, layered.
             </h2>
           </div>
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={prev}
@@ -60,7 +60,7 @@ export function Testimonials() {
         </div>
 
         {/* the stack */}
-        <div className="relative mt-12 h-[460px] sm:h-[400px]" data-reveal="pop">
+        <div className="relative mt-8 h-[380px] sm:mt-12 sm:h-[400px]" data-reveal="pop">
           {TESTIMONIALS.map((t, k) => {
             const active = k === index
             const behind = (k - index + count) % count
@@ -82,7 +82,7 @@ export function Testimonials() {
                 <div>
                   <span className="pulse-dot" aria-hidden="true" />
                   <blockquote
-                    className="mt-5 text-[clamp(1.05rem,2.4vw,1.55rem)] font-light leading-snug tracking-tight text-bone/95"
+                    className="mt-5 text-[clamp(0.95rem,2.4vw,1.55rem)] font-light leading-snug tracking-tight text-bone/95"
                   >
                     “{t.quote}”
                   </blockquote>
@@ -100,7 +100,7 @@ export function Testimonials() {
         </div>
 
         {/* progress seeds */}
-        <div className="mt-8 flex items-center gap-2 md:hidden">
+        <div className="mt-6 flex items-center gap-2 sm:mt-8">
           {TESTIMONIALS.map((t, k) => (
             <button
               key={t.name}

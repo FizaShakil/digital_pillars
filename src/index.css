@@ -146,29 +146,23 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Scene-integrated glass: samples the WebGL layer behind it more richly and
-   carries a lime "ground bounce" so cards read as lit by the 3D scene rather
-   than pasted over it. */
+/* Scene-integrated glass: subtle brightness lift so cards read as part of the
+   scene, not pasted on top. No lime tint — the dark environment does the work. */
 .glass-scene {
-  -webkit-backdrop-filter: blur(22px) saturate(165%) brightness(1.04);
-  backdrop-filter: blur(22px) saturate(165%) brightness(1.04);
+  -webkit-backdrop-filter: blur(22px) saturate(140%) brightness(1.02);
+  backdrop-filter: blur(22px) saturate(140%) brightness(1.02);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 -1px 0 rgba(200, 255, 61, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
     inset 0 -34px 60px rgba(0, 0, 0, 0.34),
-    0 22px 48px -20px rgba(0, 0, 0, 0.7),
-    0 1px 0 rgba(200, 255, 61, 0.05);
+    0 22px 48px -20px rgba(0, 0, 0, 0.7);
 }
 .glass-scene::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background:
-    radial-gradient(120% 90% at 85% -20%, rgba(200, 255, 61, 0.07), rgba(200, 255, 61, 0) 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, rgba(200, 255, 61, 0.04) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, 0.02) 100%);
   pointer-events: none;
-  opacity: 0.9;
 }
 
 /* ------------------------------------------------------------------ */

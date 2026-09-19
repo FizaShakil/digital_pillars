@@ -56,18 +56,14 @@ function SceneCanvas() {
       style={{ pointerEvents: 'none' }}
       onCreated={({ gl, scene }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 1.06
+        gl.toneMappingExposure = 1.0
         if (deviceBus.mobile) {
-          // Profile-driven: skip the multi-pass PMREM/RoomEnvironment bake on
-          // phones and use a single procedural equirect texture instead — same
-          // graphite-with-lime reflection language, a fraction of the startup.
           scene.environment = getEnvironmentTexture()
-          scene.environmentIntensity = 0.5
+          scene.environmentIntensity = 0.4
         } else {
-          // procedural room environment -> graphite reflections without assets
           const pmrem = new THREE.PMREMGenerator(gl)
           scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
-          scene.environmentIntensity = 0.55
+          scene.environmentIntensity = 0.45
           pmrem.dispose()
         }
       }}

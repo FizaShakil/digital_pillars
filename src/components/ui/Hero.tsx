@@ -5,10 +5,10 @@ import { useMagnetic } from '../../lib/ux'
 import { GlassCard } from './GlassCard'
 
 const ZONES: Record<CardZone, string> = {
-  tr: 'absolute right-[4%] top-[13%] sm:top-[15%]',
+  tr: 'absolute right-[3%] top-[11%] sm:right-[4%] sm:top-[13%]',
   mr: 'absolute right-[4%] top-[40%] hidden md:block lg:top-[43%]',
   ml: 'absolute left-[46%] top-[26%] hidden xl:block',
-  bl: 'absolute bottom-[9%] right-[4%]',
+  bl: 'absolute bottom-[16%] right-[3%] sm:bottom-[9%] sm:right-[4%]',
 }
 
 export function Hero() {
@@ -16,16 +16,16 @@ export function Hero() {
     <section id="hero" className="relative z-10 min-h-[100svh]">
       <div data-hero-exit className="relative mx-auto h-[100svh] max-w-[1440px] px-3">
         {/* eyebrow */}
-        <div className="absolute left-5 top-[14%] flex items-center gap-3 sm:left-8">
+        <div className="absolute left-5 top-[12%] sm:left-8 sm:top-[14%]">
           <span className="h-px w-8 bg-lime/60" aria-hidden="true" />
-          <p className="label">Growth, built in layers</p>
+          <p className="label mt-3">Growth, built in layers</p>
         </div>
 
         {/* primary type */}
         <h1
           aria-label={`${HERO_LINES.map((l) => l.text).join(' ')}`}
-          className="display absolute left-5 top-[17.5%] max-w-[13ch] text-bone sm:left-8 sm:top-[19%]"
-          style={{ fontSize: 'clamp(2.75rem, 9.2vw, 8rem)' }}
+          className="display absolute left-5 top-[17%] max-w-[13ch] text-bone sm:left-8 sm:top-[19%]"
+          style={{ fontSize: 'clamp(2.5rem, 8vw, 8rem)' }}
         >
           {HERO_LINES.map((line) => (
             <span key={line.text} className="hero-line">
@@ -50,13 +50,13 @@ export function Hero() {
           data-hero-support
           data-parallax
           data-depth="0.1"
-          className="absolute left-5 top-[58%] max-w-sm text-[15px] leading-relaxed text-ash sm:left-8 lg:top-[54%]"
+          className="absolute left-5 top-[52%] max-w-sm text-[14px] leading-relaxed text-ash sm:left-8 sm:top-[54%] lg:top-[54%]"
         >
           {HERO_SUPPORT}
         </p>
 
         {/* primary CTA — arrives last */}
-        <div data-hero-cta className="absolute bottom-[9%] left-5 sm:left-8">
+        <div data-hero-cta className="absolute bottom-[12%] left-5 sm:bottom-[9%] sm:left-8">
           <HeroCta />
         </div>
 

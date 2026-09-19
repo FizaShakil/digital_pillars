@@ -4,12 +4,9 @@ import * as THREE from 'three'
 import { deviceBus } from '../../lib/bus'
 
 /**
- * Studio lighting built entirely in code. The PMREM environment that gives
- * the graphite its soft premium reflections is constructed in the Canvas
- * `onCreated` hook (SceneCanvas) — no external HDR assets.
- *
- * The two key lights drift on very slow Lissajous paths so the scene feels
- * alive at rest (subtle specular shimmer) without any movement cost.
+ * Studio lighting. Key light drifts on slow Lissajous paths.
+ * Lime accent is used ONLY on the rim and a subtle top accent —
+ * it must never flood the environment. The base atmosphere is neutral graphite.
  */
 export function PerformanceEnvironment() {
   const { mobile, reduced } = deviceBus
@@ -31,8 +28,8 @@ export function PerformanceEnvironment() {
     if (accentRef.current) {
       accentRef.current.position.set(
         Math.sin(t * 0.24 + 2) * 1.4 * amp,
-        3.4 + Math.sin(t * 0.16) * 0.25,
-        1.2 + Math.cos(t * 0.27) * 1.1 * amp,
+        4.0 + Math.sin(t * 0.16) * 0.25,
+        0.5 + Math.cos(t * 0.27) * 0.8 * amp,
       )
     }
     if (fill.current) {
@@ -46,12 +43,12 @@ export function PerformanceEnvironment() {
 
   return (
     <>
-      <fog attach="fog" args={['#070808', 12, 34]} />
-      <ambientLight intensity={0.12} />
-      <hemisphereLight args={['#3d4341', '#0c0e0d', 0.55]} />
+      <fog attach="fog" args={['#070808', 10, 30]} />
+      <ambientLight intensity={0.1} />
+      <hemisphereLight args={['#505553', '#0a0b0a', 0.45]} />
       <directionalLight
         position={[6, 9, 4]}
-        intensity={2.4}
+        intensity={2.8}
         color="#f2f2ed"
         castShadow={!mobile}
         shadow-mapSize-width={1024}
@@ -64,10 +61,8 @@ export function PerformanceEnvironment() {
         shadow-camera-bottom={-8}
         shadow-bias={-0.0004}
       />
-      {/* lime rim sculpts the silhouette of the graphite pillar (drifting) */}
-      <directionalLight ref={rim} position={[-7, 3, -6]} intensity={0.6} color="#c8ff3d" />
-      <pointLight ref={accentRef} position={[0, 3.4, 1.2]} intensity={2.2} color="#c8ff3d" distance={5} decay={2.2} />
-      {/* fill light is a desktop affordance — phones drop it to cut shading cost */}
+      <directionalLight ref={rim} position={[-7, 3, -6]} intensity={0.45} color="#c8ff3d" />
+      <pointLight ref={accentRef} position={[0, 4.0, 0.5]} intensity={1.4} color="#c8ff3d" distance={6} decay={2.8} />
       {!mobile && (
         <pointLight ref={fill} position={[2, 1, 3]} intensity={0.5} color="#f2f2ed" distance={9} decay={2.4} />
       )}

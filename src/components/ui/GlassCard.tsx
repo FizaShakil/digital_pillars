@@ -119,7 +119,7 @@ export function GlassCard({
           ref={innerRef}
           onPointerMove={onMove}
           onPointerLeave={onLeave}
-          className="glass glass-scene pointer-events-auto min-w-[176px] px-5 py-4 will-change-transform"
+          className="glass glass-scene pointer-events-auto max-w-[160px] min-w-[130px] px-3 py-2.5 sm:max-w-none sm:min-w-[176px] sm:px-5 sm:py-4 will-change-transform"
         >
           <div className="flex items-center gap-2.5">
             <span className="pulse-dot" aria-hidden="true" />
@@ -127,7 +127,7 @@ export function GlassCard({
           </div>
 
           <div className="mt-3 flex items-baseline gap-2.5">
-            <span ref={valueRef} className="display tab leading-none text-[30px] text-bone">
+            <span ref={valueRef} className="display tab leading-none text-[22px] sm:text-[30px] text-bone">
               {card.value}
             </span>
             {card.delta && (
@@ -162,7 +162,7 @@ export function GlassCard({
             </svg>
           )}
 
-          <p className="mt-2.5 text-[11px] leading-snug text-ash">{card.note}</p>
+          <p className="mt-2 text-[10px] leading-snug text-ash sm:text-[11px]">{card.note}</p>
         </div>
       </div>
     </div>

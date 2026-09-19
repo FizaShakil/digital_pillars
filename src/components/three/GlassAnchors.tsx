@@ -72,7 +72,7 @@ export function GlassAnchors() {
           mesh.userData.tx = ndc.current.x
           mesh.userData.ty = ndc.current.y
           mesh.userData.tz = ndc.current.z
-          mesh.userData.scale = 1.15 + Math.min(1, r.width / 420) * 1.1
+          mesh.userData.scale = 0.9 + Math.min(1, r.width / 420) * 0.8
         } else {
           mesh.visible = false
         }
@@ -87,7 +87,7 @@ export function GlassAnchors() {
       const s = mesh.userData.scale as number
       mesh.scale.setScalar(s)
       mesh.quaternion.copy(camera.quaternion)
-      mat.opacity = 0.22 * fade
+      mat.opacity = 0.1 * fade
     }
   })
 

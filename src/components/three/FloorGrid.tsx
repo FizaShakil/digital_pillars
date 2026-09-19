@@ -41,20 +41,20 @@ export function FloorGrid() {
         <meshBasicMaterial
           color="#c8ff3d"
           transparent
-          opacity={0.28}
+          opacity={0.14}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
 
-      {/* grounding glow */}
+      {/* grounding glow — very subtle, just enough to anchor the pillar */}
       <mesh rotation-x={-Math.PI / 2} position={[0, 0.06, 0]}>
-        <planeGeometry args={[9, 9]} />
+        <planeGeometry args={[8, 8]} />
         <meshBasicMaterial
           map={glow}
           color="#c8ff3d"
           transparent
-          opacity={0.16}
+          opacity={0.07}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />

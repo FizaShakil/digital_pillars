@@ -31,8 +31,8 @@ function makeField(
  */
 export function ParticleField() {
   const { mobile, reduced } = deviceBus
-  const dustCount = mobile ? 96 : 200
-  const emberCount = mobile ? 22 : 44
+  const dustCount = mobile ? 70 : 160
+  const emberCount = mobile ? 12 : 24
 
   const dustGeo = useMemo(() => makeField(dustCount, [15, 6], 9), [dustCount])
   const emberGeo = useMemo(() => makeField(emberCount, [4, 2.2], 5), [emberCount])
@@ -81,10 +81,10 @@ export function ParticleField() {
           <pointsMaterial
             map={sprite}
             color="#c8ff3d"
-            size={0.032}
+            size={0.028}
             sizeAttenuation
             transparent
-            opacity={0.55}
+            opacity={0.3}
             depthWrite={false}
             blending={THREE.AdditiveBlending}
           />
