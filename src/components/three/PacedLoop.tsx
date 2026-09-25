@@ -38,7 +38,7 @@ const PROBE_CEILING_MS = 5000 // never leave the canvas hidden longer than this
  *    moving → a full 60fps cadence (every rAF invalidates),
  *  - while idle → a slow ambient tick keeps the light/particle drift alive
  *    without paying for a permanent render loop. The interval is deliberately
- *    long (320ms, ~3fps): once idle, every extra frame is a potential long
+ *    long (900ms, ~1fps): once idle, every extra frame is a potential long
  *    task, and the drift is far too subtle to need more.
  *
  * It also owns the readiness verdict: once the scene has warmed up and holds
@@ -126,7 +126,7 @@ export function PacedLoop({ onProbe }: { onProbe?: (ok: boolean) => void }) {
 
       if (hot) {
         invalidate()
-      } else if (now - lastIdleRender > 320) {
+      } else if (now - lastIdleRender > 900) {
         lastIdleRender = now
         invalidate()
       }

@@ -11,6 +11,17 @@ type Layer = { width: number; y: number; x: number; z: number; yaw: number }
 const SLABS = 8
 const PITCH = 0.54
 
+// Shared accent materials — module constants (not React state) so per-frame
+// opacity writes are plain three.js, created once for the app lifetime.
+const ringMat = new THREE.MeshBasicMaterial({
+  color: '#c8ff3d',
+  transparent: true,
+  opacity: 0,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+})
+const nodeMat = new THREE.MeshBasicMaterial({ color: '#c8ff3d', transparent: true, opacity: 0 })
+
 function buildLayers(): Layer[] {
   const out: Layer[] = []
   for (let i = 0; i < SLABS; i++) {
@@ -139,24 +150,7 @@ export function GrowthPillar() {
     [],
   )
 
-  const ringMat = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: '#c8ff3d',
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }),
-    [],
-  )
-
-  const nodeMat = useMemo(
-    () => new THREE.MeshBasicMaterial({ color: '#c8ff3d', transparent: true, opacity: 0 }),
-    [],
-  )
-
-  const nodes = useMemo(() => {
+const nodes = useMemo(() => {
     const arr: { pos: [number, number, number]; beacon: boolean }[] = []
     layers.forEach((l, i) => {
       if (i === 0 || i >= SLABS - 2) return

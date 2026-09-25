@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { HERO_LINES, HERO_SCROLL_HINT, HERO_SUPPORT, METRIC_CARDS } from '../../content/data'
 import type { CardZone } from '../../content/types'
 import { scrollToTarget } from '../../lib/smooth'
@@ -22,38 +23,41 @@ export function Hero() {
         </div>
 
         {/* primary type */}
-        <h1
-          aria-label={`${HERO_LINES.map((l) => l.text).join(' ')}`}
-          className="display absolute left-5 top-[17%] max-w-[13ch] text-bone sm:left-8 sm:top-[19%]"
-          style={{ fontSize: 'clamp(2.5rem, 8vw, 8rem)' }}
-        >
-          {HERO_LINES.map((line) => (
-            <span key={line.text} className="hero-line">
-              <span
-                data-hero-line
-                className={
-                  line.emphasis === 'lime'
-                    ? 'text-lime'
-                    : line.emphasis === 'outline'
-                      ? 'text-stroke'
-                      : 'text-bone'
-                }
-              >
-                {line.text}
+        <div className="absolute left-5 top-[17%] sm:left-8 sm:top-[19%]">
+          <h1
+            aria-label={`${HERO_LINES.map((l) => l.text).join(' ')}`}
+            className="display max-w-[12ch] text-bone"
+            style={{ fontSize: 'clamp(3rem, 5.8vw, 6.8rem)' }}
+          >
+            {HERO_LINES.map((line, i) => (
+              <span key={line.text} className="hero-line">
+                <span
+                  data-hero-line
+                  className={
+                    line.emphasis === 'lime'
+                      ? 'text-lime'
+                      : line.emphasis === 'outline'
+                        ? 'text-stroke'
+                        : 'text-bone'
+                  }
+                  style={{ '--rise-delay': `${0.85 + i * 0.1}s` } as CSSProperties}
+                >
+                  {line.text}
+                </span>
               </span>
-            </span>
-          ))}
-        </h1>
+            ))}
+          </h1>
 
-        {/* supporting copy */}
-        <p
-          data-hero-support
-          data-parallax
-          data-depth="0.1"
-          className="absolute left-5 top-[52%] max-w-sm text-[14px] leading-relaxed text-ash sm:left-8 sm:top-[54%] lg:top-[54%]"
-        >
-          {HERO_SUPPORT}
-        </p>
+          {/* supporting copy */}
+          <p
+            data-hero-support
+            data-parallax
+            data-depth="0.1"
+            className="mt-5 max-w-sm text-[14px] leading-relaxed text-ash sm:mt-6 lg:mt-7"
+          >
+            {HERO_SUPPORT}
+          </p>
+        </div>
 
         {/* primary CTA — arrives last */}
         <div data-hero-cta className="absolute bottom-[12%] left-5 sm:bottom-[9%] sm:left-8">
@@ -68,7 +72,6 @@ export function Hero() {
           className="absolute bottom-[9%] right-[18%] hidden items-center gap-3 md:flex"
         >
           <span className="h-px w-10 bg-white/20" aria-hidden="true" />
-          <span className="label">{HERO_SCROLL_HINT}</span>
         </div>
 
         {/* floating glass metric cards */}
