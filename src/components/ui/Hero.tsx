@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { HERO_LINES, HERO_SCROLL_HINT, HERO_SUPPORT, METRIC_CARDS } from '../../content/data'
+import { HERO_LINES, HERO_SUPPORT, METRIC_CARDS } from '../../content/data'
 import type { CardZone } from '../../content/types'
 import { scrollToTarget } from '../../lib/smooth'
 import { useMagnetic } from '../../lib/ux'
@@ -16,12 +16,6 @@ export function Hero() {
   return (
     <section id="hero" className="relative z-10 min-h-[100svh]">
       <div data-hero-exit className="relative mx-auto h-[100svh] max-w-[1440px] px-3">
-        {/* eyebrow */}
-        <div className="absolute left-5 top-[12%] sm:left-8 sm:top-[14%]">
-          <span className="h-px w-8 bg-lime/60" aria-hidden="true" />
-          <p className="label mt-3">Growth, built in layers</p>
-        </div>
-
         {/* primary type */}
         <div className="absolute left-5 top-[17%] sm:left-8 sm:top-[19%]">
           <h1
