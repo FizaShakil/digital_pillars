@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { deviceBus } from './bus'
-import { gpuTier } from './gpu'
 
 export type DeviceInfo = {
   mobile: boolean
@@ -86,11 +85,15 @@ export function sceneForced(): boolean {
   }
 }
 
-/** The cinematic layer runs for real browsers with WebGL; `?scene=1` overrides for QA. */
+/** The cinematic layer runs for real browsers with WebGL; `?scene=1` overrides for QA.
+ *  The timed render probe kept on `lib/gpu.ts` is intentionally NOT part of this
+ *  gate: creating/compiling a WebGL context on the boot path blocks first paint
+ *  on weak machines. Capability is a cheap context probe here; sustained-frame
+ *  health is judged at runtime by `PacedLoop`, which demotes to the static layer. */
 export function webglCapable(): boolean {
   if (typeof window === 'undefined') return true
   if (sceneForced()) return true
-  return supportsWebGL() && gpuTier() !== 'unavailable'
+  return supportsWebGL()
 }
 
 interface Listeners {

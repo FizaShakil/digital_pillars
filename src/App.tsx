@@ -60,12 +60,30 @@ function measureBeats(): number[] {
 export default function App() {
   const reduced = usePrefersReducedMotion()
   const rootRef = useRef<HTMLDivElement>(null)
-  const [webglOk] = useState(() => initDevice().webgl)
+  // WebGL capability is probed AFTER first paint: running `initDevice()` inside
+  // the render (state initializer) creates a GPU context on the critical path,
+  // which blocks the boot curtain on weak machines. Optimistic `true` here;
+  // the post-paint effect swaps to `false` (=> static fallback) if unsupported.
+  const [webglOk, setWebglOk] = useState(true)
   const [sceneFailed, setSceneFailed] = useState(false)
   const [mountScene, setMountScene] = useState(false)
   const [sceneReady, setSceneReady] = useState(false)
   const [curtainFade, setCurtainFade] = useState(false)
   const [curtainGone, setCurtainGone] = useState(false)
+
+  // Boot-time device flags after the first paint (cheap matchMedia + one WebGL
+  // context check). Also feeds `deviceBus`, which the scene reads on mount.
+  useEffect(() => {
+    let mounted = true
+    const id = window.setTimeout(() => {
+      const info = initDevice()
+      if (mounted && !info.webgl) setWebglOk(false)
+    }, 0)
+    return () => {
+      mounted = false
+      window.clearTimeout(id)
+    }
+  }, [])
 
   // Reduced motion renders the lean static fallback instead of the WebGL layer.
   // `?static=1` forces the fallback for QA/perf comparisons (and lets the client
@@ -246,12 +264,8 @@ export default function App() {
         },
       )
 
-      // 4. hero typography rises into place
-      gsap.fromTo(
-        '[data-hero-line]',
-        { yPercent: 115 },
-        { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: 0.1, delay: 0.85 },
-      )
+      // 4. hero typography rises via CSS (`@keyframes hero-rise`) — the
+      // reveal never depends on the JS ticker, so it can't be left hidden.
 
       // supporting layer
       gsap.fromTo(

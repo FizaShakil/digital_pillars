@@ -226,13 +226,27 @@ html.lenis body {
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
 }
+/* The headline reveal is pure CSS (compositor-driven, can never be left
+   invisible by a JS hiccup): the resting state is fully visible, and the
+   rise plays only while the animation runs. `--rise-delay` staggers lines. */
 .hero-line > span {
   display: inline-block;
-  transform: translateY(115%);
+  transform: none;
   will-change: transform;
+  animation: hero-rise 1.2s var(--ease-cinematic) both;
+  animation-delay: var(--rise-delay, 0.85s);
+}
+@keyframes hero-rise {
+  from {
+    transform: translateY(115%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 /* reduced-motion users receive the settled state, never the reveal mask */
 html.reduce .hero-line > span {
+  animation: none;
   transform: none;
 }
 
