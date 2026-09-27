@@ -1,4 +1,4 @@
-import { EMAIL, HERO_SUPPORT } from '../../content/data'
+import { EMAIL } from '../../content/data'
 import { useMagnetic } from '../../lib/ux'
 import { LogoMark } from './LogoMark'
 
@@ -7,28 +7,28 @@ export function Contact() {
 
   return (
     <>
-      <section id="contact" className="pointer-events-auto relative z-10 scroll-mt-24">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center px-5 pb-[12vh] pt-[14vh] text-center sm:px-8 sm:pt-[18vh]">
+      <section id="contact" className="pointer-events-auto relative z-10 scroll-mt-24 mt-44 sm:mt-60">
+        <div className="mx-auto flex max-w-360px flex-col items-center px-5 pb-[12vh] pt-[14vh] text-center sm:px-8 sm:pt-[18vh]">
           <p className="label" data-parallax data-depth="0.06">03 — Start</p>
           <h2
             data-reveal="pop"
             className="display mt-6 text-bone"
             style={{ fontSize: 'clamp(2.6rem, 7vw, 5.6rem)' }}
           >
-            Think in layers.
+            Ready to build momentum?
           </h2>
           <p
             data-reveal="up"
             className="mt-5 max-w-md text-[15px] leading-relaxed text-ash"
           >
-            {HERO_SUPPORT}
+            We build the strategy, creative and systems behind sustainable growth — so your brand can move with more focus and more confidence.
           </p>
 
           <div data-reveal="up" className="mt-10">
             <a
               ref={ctaRef}
               href={`mailto:${EMAIL}?subject=Start%20a%20project`}
-              className="btn btn-lime !px-8 !py-4 text-[13px]"
+              className="btn btn-lime px-8! py-4! text-[13px]"
             >
               Start a project
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -47,7 +47,7 @@ export function Contact() {
       </section>
 
       <footer className="pointer-events-auto relative z-10 border-t border-bone/10">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-6 sm:px-8">
+        <div className="mx-auto flex max-w-360px flex-wrap items-center justify-between gap-4 px-5 py-6 sm:px-8">
           <span className="flex items-center gap-3">
             <LogoMark size={18} />
             <span className="label">Digital Pillars</span>

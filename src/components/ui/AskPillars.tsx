@@ -64,7 +64,7 @@ export function AskPillars() {
           </div>
 
           <p className="px-5 pt-4 text-[12px] leading-relaxed text-ash">
-            Quick answers from the studio team. No chat scripts — just the short version.
+            Clear answers from the studio team. No jargon, no fluff — just the essentials.
           </p>
 
           <div className="max-h-[52vh] overflow-y-auto px-5 pb-5 pt-1">
